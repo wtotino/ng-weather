@@ -1,6 +1,6 @@
 import { Component, inject, Signal } from '@angular/core';
 import { Router } from "@angular/router";
-import { ConditionsAndZip } from '../conditions-and-zip.type';
+import { ConditionsAndZip } from 'app/conditions-and-zip.type';
 import { LocationService } from "../location.service";
 import { WeatherService } from "../weather.service";
 
@@ -11,10 +11,12 @@ import { WeatherService } from "../weather.service";
 })
 export class CurrentConditionsComponent {
 
-	private weatherService = inject(WeatherService);
+	public weatherService = inject(WeatherService);
 	private router = inject(Router);
 	protected locationService = inject(LocationService);
-	protected currentConditionsByZip: Signal<ConditionsAndZip[]> = this.weatherService.getCurrentConditions();
+
+	// We make a computed signal that turns the map into an array
+	public currentConditionsByZip: Signal<ConditionsAndZip[]> = this.weatherService.getCurrentConditions();
 
 	public showForecast(zipcode: string){
 		this.router.navigate(['/forecast', zipcode]);

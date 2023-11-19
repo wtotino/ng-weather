@@ -1,34 +1,54 @@
 import { Injectable } from '@angular/core';
-import { WeatherService } from "./weather.service";
+import { BehaviorSubject } from 'rxjs';
 
 export const LOCATIONS: string = "locations";
 
 @Injectable()
 export class LocationService {
 
-	private locations: string[] = [];
+	private locationsArr: string[] = [];
 
-	constructor(private weatherService: WeatherService) {
+	/**
+	 * Subject used to notify when locations are changed
+	 * We use a BehaviorSubject so whoever subscribes will get the current statte of the locations
+	 */
+	private locationsSub: BehaviorSubject<string[]> = new BehaviorSubject([]);
+
+	/**
+	 * get locations updates as Observable
+	 */
+	public get locations() {
+		return this.locationsSub.asObservable();
+	}
+
+	constructor() {
 		const locString = localStorage.getItem(LOCATIONS);
 		if (locString) {
-			this.locations = JSON.parse(locString);
-		} for (const loc of this.locations) {
-			this.weatherService.addCurrentConditions(loc);
+			this.locationsArr = JSON.parse(locString);
+
+			// We notify the whole array 
+			this.locationsSub.next(this.locationsArr);
 		}
 	}
 
+	/**
+	 * Updates locations and localStorage
+	 */
 	public addLocation(zipcode: string) {
-		this.locations.push(zipcode);
-		localStorage.setItem(LOCATIONS, JSON.stringify(this.locations));
-		this.weatherService.addCurrentConditions(zipcode);
+		// Don't add empty zipcodes and already existing zipcodes
+		if(zipcode?.length > 0 && !this.locationsArr.includes(zipcode)) {
+			this.locationsArr.push(zipcode);
+			localStorage.setItem(LOCATIONS, JSON.stringify(this.locationsArr));
+			this.locationsSub.next(this.locationsArr);
+		}
 	}
 
 	public removeLocation(zipcode: string) {
-		const index = this.locations.indexOf(zipcode);
+		const index = this.locationsArr.indexOf(zipcode);
 		if (index !== -1) {
-			this.locations.splice(index, 1);
-			localStorage.setItem(LOCATIONS, JSON.stringify(this.locations));
-			this.weatherService.removeCurrentConditions(zipcode);
+			this.locationsArr.splice(index, 1);
+			localStorage.setItem(LOCATIONS, JSON.stringify(this.locationsArr));
+			this.locationsSub.next(this.locationsArr);
 		}
 	}
 }
