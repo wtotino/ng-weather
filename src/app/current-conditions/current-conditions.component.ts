@@ -1,22 +1,19 @@
-import {Component, inject, Signal} from '@angular/core';
-import {WeatherService} from "../weather.service";
-import {LocationService} from "../location.service";
-import {Router} from "@angular/router";
-import {ConditionsAndZip} from '../conditions-and-zip.type';
+import { Component, OnInit, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Observable, interval } from 'rxjs';
+import { WeatherService } from "../weather.service";
 
 @Component({
   selector: 'app-current-conditions',
   templateUrl: './current-conditions.component.html',
   styleUrls: ['./current-conditions.component.css']
 })
-export class CurrentConditionsComponent {
+export class CurrentConditionsComponent implements OnInit {
 
-  private weatherService = inject(WeatherService);
-  private router = inject(Router);
-  protected locationService = inject(LocationService);
-  protected currentConditionsByZip: Signal<ConditionsAndZip[]> = this.weatherService.getCurrentConditions();
+  public weatherService = inject(WeatherService);
+  private interval: Observable<number> = interval(30000).pipe(takeUntilDestroyed());
 
-  showForecast(zipcode : string){
-    this.router.navigate(['/forecast', zipcode])
+  ngOnInit() {
+	this.interval.subscribe(() => this.weatherService.updateAllConditions());
   }
 }
