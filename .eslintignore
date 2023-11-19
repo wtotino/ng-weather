@@ -1,0 +1,7 @@
+.eslintrc.js
+node_modules
+dist
+prettier.config.js
+mock
+eslint/*
+src/test.ts
