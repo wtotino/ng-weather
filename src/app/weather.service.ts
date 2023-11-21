@@ -21,6 +21,8 @@ export interface ConditionsMap {
 @Injectable()
 export class WeatherService {
 
+	// By using a prefix we make sure even in an object we keep insertion order, since zipcodes are numbers it would order them otherwise
+	private static readonly PREFIX = "z_";
 	private static URL = 'http://api.openweathermap.org/data/2.5';
 	private static APPID = '5a4b2d457ecbef9eb2a71e480b947604';
 	private static ICON_URL = 'https://raw.githubusercontent.com/udacity/Sunshine-Version-2/sunshine_master/app/src/main/res/drawable-hdpi/';
@@ -40,7 +42,8 @@ export class WeatherService {
 			 */
 			this.currentConditionsMap.mutate(conditions => {
 				// We iterate through the existing conditions to remove the ones that have been removed from the locationService
-				Object.getOwnPropertyNames(conditions).forEach(c => {
+				const keys = Object.getOwnPropertyNames(conditions);
+				keys.forEach(c => {
 					if(!zipcodes.includes(c)) {
 						/* We don't call removeCurrentConditions so we don't have multiple mutations
 						   at the moment nobody calls removeCurrentConditions because it goes through locationService
@@ -55,7 +58,7 @@ export class WeatherService {
 			// Get current conditions so we can use them to filter the zipcodes to avoid making needless calls to already fetched conditions
 			const current = this.currentConditionsMap();
 			// Then we add the new conditions
-			zipcodes.filter(z => !current[z]).forEach(z => this.addCurrentConditions(z));
+			zipcodes.filter(z => !current[WeatherService.PREFIX + z]).forEach(z => this.addCurrentConditions(z));
 		});
 	}
 
@@ -63,7 +66,7 @@ export class WeatherService {
 		// Here we make a request to get the current conditions data from the API. Note the use of backticks and an expression to insert the zipcode
 		const url = `${WeatherService.URL}/weather?zip=${zipcode},us&units=imperial&APPID=${WeatherService.APPID}`;
 		this.cacheService.get(url, this.http.get<CurrentConditions>(url)).subscribe(data => this.currentConditionsMap.mutate(conditions => {
-			conditions[zipcode] = {zip: zipcode, data};
+			conditions[WeatherService.PREFIX + zipcode] = {zip: zipcode, data};
 		}));
 	}
 
@@ -73,7 +76,7 @@ export class WeatherService {
 	 */
 	public removeCurrentConditions(zipcode: string) {
 		this.currentConditionsMap.mutate(conditions => {
-			delete conditions[zipcode];
+			delete conditions[WeatherService.PREFIX + zipcode];
 		});
 	}
 

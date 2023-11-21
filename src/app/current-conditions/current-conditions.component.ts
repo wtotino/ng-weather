@@ -12,6 +12,9 @@ import { WeatherService } from "../weather.service";
 })
 export class CurrentConditionsComponent implements AfterViewInit {
 
+	// By using a prefix we make sure even in an object we keep insertion order, since zipcodes are numbers it would order them otherwise
+	private static readonly PREFIX = "z_";
+
 	@ViewChild("conditionTemplate") public conditionTemplate: TemplateRef<any>;
 	@ViewChild("tabsComponent") public tabsComponent: TabsComponent;
 
@@ -33,17 +36,18 @@ export class CurrentConditionsComponent implements AfterViewInit {
 	public ngAfterViewInit() {
 		this.tabs = computed(() => {
 			const conditions = this.currentConditionsByZip();
+			console.log(conditions);
 
 			// First we check if we have to remove some values
 			Object.keys(this.tabsMap).forEach(t => {
-				if(!conditions.some(c => c.zip === t)) {
+				if(!conditions.some(c => CurrentConditionsComponent.PREFIX + c.zip === t)) {
 					delete this.tabsMap[t];
 				}
 			});
 
 			// Then we add the values we don't already have
-			conditions.filter(c => !this.tabsMap[c.zip]).forEach(c => {
-				this.tabsMap[c.zip] = {
+			conditions.filter(c => !this.tabsMap[CurrentConditionsComponent.PREFIX + c.zip]).forEach(c => {
+				this.tabsMap[CurrentConditionsComponent.PREFIX + c.zip] = {
 					content: this.conditionTemplate,
 					data: c,
 					title: c.data.name + " (" + c.zip + ")",
