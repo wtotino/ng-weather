@@ -1,6 +1,6 @@
 import { Injectable, Signal, computed, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Observable, catchError, of } from 'rxjs';
+import { Observable, catchError } from 'rxjs';
 
 import { HttpClient } from '@angular/common/http';
 import { CacheService } from 'app/cache.service';
@@ -70,7 +70,7 @@ export class WeatherService {
 			// Remove the location from the localStorage if we had some error fecthing data
 			console.error("Error while retrieving data");
 			this.locationService.removeLocation(zipcode);
-			return of(e);
+			throw e;
 		}))).subscribe(data => this.currentConditionsMap.mutate(conditions => {
 			conditions[WeatherService.PREFIX + zipcode] = {zip: zipcode, data};
 		}));
