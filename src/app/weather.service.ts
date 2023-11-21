@@ -66,7 +66,12 @@ export class WeatherService {
 	public addCurrentConditions(zipcode: string): void {
 		// Here we make a request to get the current conditions data from the API. Note the use of backticks and an expression to insert the zipcode
 		const url = `${WeatherService.URL}/weather?zip=${zipcode},us&units=imperial&APPID=${WeatherService.APPID}`;
-		this.cacheService.get(url, this.http.get<CurrentConditions>(url)).subscribe(data => this.currentConditionsMap.mutate(conditions => {
+		this.cacheService.get(url, this.http.get<CurrentConditions>(url).pipe(catchError(e => {
+			// Remove the location from the localStorage if we had some error fecthing data
+			console.error("Error while retrieving data");
+			this.locationService.removeLocation(zipcode);
+			return of(e);
+		}))).subscribe(data => this.currentConditionsMap.mutate(conditions => {
 			conditions[WeatherService.PREFIX + zipcode] = {zip: zipcode, data};
 		}));
 	}
@@ -89,12 +94,7 @@ export class WeatherService {
 	public getForecast(zipcode: string): Observable<Forecast> {
 		// Here we make a request to get the forecast data from the API. Note the use of backticks and an expression to insert the zipcode
 		const url = `${WeatherService.URL}/forecast/daily?zip=${zipcode},us&units=imperial&cnt=5&APPID=${WeatherService.APPID}`;
-		return this.cacheService.get(url, this.http.get<Forecast>(url).pipe(catchError(e => {
-			// Remove the location from the localStorage if we had some error fecthing data
-			console.error("Error while retrieving data");
-			this.locationService.removeLocation(zipcode);
-			return of(e);
-		})));
+		return this.cacheService.get(url, this.http.get<Forecast>(url));
 	}
 
 	public getWeatherIcon(id: number): string {
