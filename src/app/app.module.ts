@@ -20,7 +20,7 @@ import { ZipcodeEntryComponent } from './zipcode-entry/zipcode-entry.component';
 export const APP_CONFIG = new InjectionToken<AppConfig>('app.config');
 @NgModule({
 	declarations: [AppComponent, ZipcodeEntryComponent, ForecastsListComponent, CurrentConditionsComponent, MainPageComponent, TabsComponent],
-	imports: [BrowserModule, FormsModule, HttpClientModule, RouterModule, routing, ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production })],
+	imports: [BrowserModule, FormsModule, HttpClientModule, RouterModule, routing, ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })],
 	providers: [
 		LocationService,
 		WeatherService,
