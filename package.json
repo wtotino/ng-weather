@@ -5,7 +5,7 @@
 	"scripts": {
 		"ng": "ng",
 		"start": "ng serve",
-		"build": "ng build --base-href /ng-weather/",
+		"build": "ng build --configuration=production --base-href /ng-weather/",
 		"test": "ng test",
 		"lint": "eslint --ext .ts src",
 		"e2e": "ng e2e"
