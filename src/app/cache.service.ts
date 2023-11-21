@@ -46,13 +46,11 @@ export class CacheService {
 
 		// If we find the value in cache
 		if(this.cache[url] && this.cache[url].lastUpdate > cacheExpire) {
-			console.log("Cache found");
 			return of(this.cache[url].data);
 		}
 
 		// If we don't find the value or is expired we return the observable but save data in cache
 		return observable.pipe(tap(data => {
-			console.log("Cache not found or expired");
 			this.cache[url] = { data, lastUpdate: new Date().getTime() };
 
 			localStorage.setItem(CacheService.APP_CACHE, JSON.stringify(this.cache));
