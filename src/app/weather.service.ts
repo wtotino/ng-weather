@@ -1,6 +1,6 @@
 import { Injectable, Signal, computed, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Observable } from 'rxjs';
+import { Observable, catchError, of } from 'rxjs';
 
 import { HttpClient } from '@angular/common/http';
 import { CacheService } from 'app/cache.service';
@@ -89,7 +89,11 @@ export class WeatherService {
 	public getForecast(zipcode: string): Observable<Forecast> {
 		// Here we make a request to get the forecast data from the API. Note the use of backticks and an expression to insert the zipcode
 		const url = `${WeatherService.URL}/forecast/daily?zip=${zipcode},us&units=imperial&cnt=5&APPID=${WeatherService.APPID}`;
-		return this.cacheService.get(url, this.http.get<Forecast>(url));
+		return this.cacheService.get(url, this.http.get<Forecast>(url).pipe(catchError(e => {
+			// Remove the location from the localStorage if we had some error fecthing data
+			this.locationService.removeLocation(zipcode);
+			return of(e);
+		})));
 	}
 
 	public getWeatherIcon(id: number): string {
