@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from "@angular/common/http";
 import { Inject, Injectable } from "@angular/core";
 import { APP_CONFIG } from "app/app.module";
 import { AppConfig } from "app/data/config";
@@ -51,9 +52,11 @@ export class CacheService {
 
 		// If we don't find the value or is expired we return the observable but save data in cache
 		return observable.pipe(tap(data => {
-			this.cache[url] = { data, lastUpdate: new Date().getTime() };
+			if(!(data instanceof HttpErrorResponse)) {
+				this.cache[url] = { data, lastUpdate: new Date().getTime() };
 
-			localStorage.setItem(CacheService.APP_CACHE, JSON.stringify(this.cache));
+				localStorage.setItem(CacheService.APP_CACHE, JSON.stringify(this.cache));
+			}
 		}));
 	}
 }
