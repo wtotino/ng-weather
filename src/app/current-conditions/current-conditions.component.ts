@@ -36,7 +36,6 @@ export class CurrentConditionsComponent implements AfterViewInit {
 	public ngAfterViewInit() {
 		this.tabs = computed(() => {
 			const conditions = this.currentConditionsByZip();
-			console.log(conditions);
 
 			// First we check if we have to remove some values
 			Object.keys(this.tabsMap).forEach(t => {
