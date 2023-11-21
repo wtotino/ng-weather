@@ -40,7 +40,7 @@ export class WeatherService {
 			 */
 			this.currentConditionsMap.mutate(conditions => {
 				// We iterate through the existing conditions to remove the ones that have been removed from the locationService
-				Object.keys(conditions).forEach(c => {
+				Object.getOwnPropertyNames(conditions).forEach(c => {
 					if(!zipcodes.includes(c)) {
 						/* We don't call removeCurrentConditions so we don't have multiple mutations
 						   at the moment nobody calls removeCurrentConditions because it goes through locationService

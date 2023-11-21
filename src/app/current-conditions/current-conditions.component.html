@@ -1,21 +1,35 @@
-<div>
-  <div *ngFor="let location of currentConditionsByZip()" class="well flex" (click)="showForecast(location.zip)">
-    <div>
-      <h3>{{location.data.name}} ({{location.zip}})</h3>
-      <h4>Current conditions: {{location.data.weather[0].main}}</h4>
-      <h4>Temperatures today:</h4>
-      <p>
-        Current {{location.data.main.temp | number:'.0-0'}}
-        - Max {{location.data.main.temp_max | number:'.0-0'}}
-        - Min {{location.data.main.temp_min | number:'.0-0'}}
-      </p>
-      <p>
-        <a [routerLink]="['/forecast', location.zip]" >Show 5-day forecast for {{location.data.name}}</a>
-      </p>
-    </div>
-    <div>
-      <span class="close" (click)="locationService.removeLocation(location.zip)">&times;</span>
-      <img [src]="weatherService.getWeatherIcon(location.data.weather[0].id)" alt="condition">
-    </div>
- </div>
-</div>
+<app-tabs #tabsComponent *ngIf="tabs" [tabs]="tabs()" [tabContainer]="tabContainer" [tabLink]="tabLink"></app-tabs>
+
+<ng-template #tabContainer let-activeTab>
+	<div *ngIf="activeTab?.content" class="conditions-container">
+		<ng-container *ngTemplateOutlet="activeTab.content; context: { $implicit: activeTab }"></ng-container>
+	</div>
+</ng-template>
+
+<ng-template #tabLink let-tab let-activeTab="activeTab">
+	<div class="tab" [ngClass]="{ 'selected': activeTab === tab }">
+		<button (click)="tabsComponent?.changeTab(tab)">{{ tab.title }}</button>
+		<span class="close" (click)="locationService.removeLocation(tab.data.zip)">&times;</span>
+	</div>
+</ng-template>
+
+<ng-template #conditionTemplate let-tab>
+	<div class="well flex">
+		<div>
+			<h3>{{tab.data.data.name}} ({{tab.data.zip}})</h3>
+			<h4>Current conditions: {{tab.data.data.weather[0].main}}</h4>
+			<h4>Temperatures today:</h4>
+			<p>
+				Current {{tab.data.data.main.temp | number:'.0-0'}}
+				- Max {{tab.data.data.main.temp_max | number:'.0-0'}}
+				- Min {{tab.data.data.main.temp_min | number:'.0-0'}}
+			</p>
+			<p>
+				<a [routerLink]="['/forecast', tab.data.zip]">Show 5-day forecast for {{tab.data.data.name}}</a>
+			</p>
+		</div>
+		<div>
+			<img [src]="weatherService.getWeatherIcon(tab.data.data.weather[0].id)" alt="condition">
+		</div>
+	</div>
+</ng-template>

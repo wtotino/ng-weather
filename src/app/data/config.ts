@@ -11,6 +11,5 @@ export const NG_WEATHER_CONFIG: AppConfig = {
 	/**
 	 *  How many milliseconds a value needs to be kept inside the cache
 	 */
-	cacheRefreshTime: 15 * 1000
-	// cacheRefreshTime: 2 * 60 * 60 * 1000
+	cacheRefreshTime: 2 * 60 * 60 * 1000
 };

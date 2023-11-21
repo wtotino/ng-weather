@@ -1,0 +1,22 @@
+<ul *ngIf="tabsValue?.length > 0" class="tabs">
+	<li *ngFor="let t of tabsValue" class="tab">
+		<ng-container *ngIf="tabLink">
+			<ng-container *ngTemplateOutlet="tabLink; context: { $implicit: t, activeTab: activeTab }"></ng-container>
+		</ng-container>
+
+		<!-- I used an ng-container instead of ngIf else with template otherwise it would've created a new template for each tab -->
+		<ng-container *ngIf="!tabLink">
+			<button [ngClass]="{ 'selected': activeTab === t }" (click)="changeTab(t)">{{ t.title }}</button>
+		</ng-container>		
+	</li>
+</ul>
+
+<ng-container *ngIf="tabContainer; else defaultContainer">
+	<ng-container *ngTemplateOutlet="tabContainer; context: { $implicit: activeTab }"></ng-container>
+</ng-container>
+
+<ng-template #defaultContainer>
+	<div *ngIf="activeTab?.content">
+		<ng-container *ngTemplateOutlet="activeTab.content; context: { $implicit: activeTab }"></ng-container>
+	</div>
+</ng-template>

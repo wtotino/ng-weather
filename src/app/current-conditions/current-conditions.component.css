@@ -1,7 +1,38 @@
 .close {
   cursor: pointer;
+  padding: 0.2em;
 }
+
 .flex {
   display: flex;
   justify-content: space-between;
+}
+
+.conditions-container {
+	padding: 0.5em;
+	border: 1px solid #000000;
+}
+
+.tab {
+	border: 1px solid #000000;
+	color: #FFFFFF;
+	border-bottom: 0;
+	border-radius: 0;
+	background-color: #617AA0;
+
+	border-start-start-radius: 4px;
+	border-start-end-radius: 4px;
+
+	display: flex;
+	align-items: center;
+}
+
+.tab button {
+	border: 0;
+	background-color: transparent;
+	padding: 0.5em;
+}
+
+.tab:hover, .tab.selected {
+	background-color: #485b78;
 }
