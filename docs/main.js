@@ -573,14 +573,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   WeatherService: () => (/* binding */ WeatherService)
 /* harmony export */ });
-/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! tslib */ 2321);
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/core */ 1699);
-/* harmony import */ var _angular_core_rxjs_interop__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/core/rxjs-interop */ 839);
-/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/common/http */ 4860);
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! tslib */ 2321);
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/core */ 1699);
+/* harmony import */ var _angular_core_rxjs_interop__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/core/rxjs-interop */ 839);
+/* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/common/http */ 4860);
 /* harmony import */ var app_cache_service__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! app/cache.service */ 2810);
 /* harmony import */ var app_location_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! app/location.service */ 4056);
+/* harmony import */ var environments_environment__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! environments/environment */ 553);
 var _class;
 var WeatherService_1;
+
 
 
 
@@ -592,13 +594,13 @@ let WeatherService = WeatherService_1 = (_class = class WeatherService {
     this.http = http;
     this.locationService = locationService;
     this.cacheService = cacheService;
-    this.currentConditionsMap = (0,_angular_core__WEBPACK_IMPORTED_MODULE_2__.signal)({});
+    this.currentConditionsMap = (0,_angular_core__WEBPACK_IMPORTED_MODULE_3__.signal)({});
     /**
      * computed signal that returns data as an array like in the previous implementation, by doing so the new way of keeping the data is transparent for whoever uses the service
      */
-    this.currentConditions = (0,_angular_core__WEBPACK_IMPORTED_MODULE_2__.computed)(() => Object.values(this.currentConditionsMap()));
+    this.currentConditions = (0,_angular_core__WEBPACK_IMPORTED_MODULE_3__.computed)(() => Object.values(this.currentConditionsMap()));
     // We use takeUntilDestroyed so that if this service is provided locally in a component it will be destoryed together with the component
-    this.locationService.locations.pipe((0,_angular_core_rxjs_interop__WEBPACK_IMPORTED_MODULE_3__.takeUntilDestroyed)()).subscribe(zipcodes => {
+    this.locationService.locations.pipe((0,_angular_core_rxjs_interop__WEBPACK_IMPORTED_MODULE_4__.takeUntilDestroyed)()).subscribe(zipcodes => {
       /* Personal note: I implemented the update this way so it wouldn't make unnecessary calls whenever locationservice passes the whole array back.
       I could've just cleared the object and add all the new values back but that would've caused unnecesary calls to the openweather API. Since in the
       Step 3 we implemented a cache system this wouldn't be the case anymore but I decided to leave things as they were when I implemented this in Step 1
@@ -667,14 +669,14 @@ let WeatherService = WeatherService_1 = (_class = class WeatherService {
       return WeatherService_1.ICON_URL + "art_clear.png";
     }
   }
-}, _class.PREFIX = "z_", _class.URL = 'http://api.openweathermap.org/data/2.5', _class.APPID = '5a4b2d457ecbef9eb2a71e480b947604', _class.ICON_URL = 'https://raw.githubusercontent.com/udacity/Sunshine-Version-2/sunshine_master/app/src/main/res/drawable-hdpi/', _class.ctorParameters = () => [{
-  type: _angular_common_http__WEBPACK_IMPORTED_MODULE_4__.HttpClient
+}, _class.PREFIX = "z_", _class.URL = (environments_environment__WEBPACK_IMPORTED_MODULE_2__.environment.production ? 'https' : 'http') + '://api.openweathermap.org/data/2.5', _class.APPID = '5a4b2d457ecbef9eb2a71e480b947604', _class.ICON_URL = 'https://raw.githubusercontent.com/udacity/Sunshine-Version-2/sunshine_master/app/src/main/res/drawable-hdpi/', _class.ctorParameters = () => [{
+  type: _angular_common_http__WEBPACK_IMPORTED_MODULE_5__.HttpClient
 }, {
   type: app_location_service__WEBPACK_IMPORTED_MODULE_1__.LocationService
 }, {
   type: app_cache_service__WEBPACK_IMPORTED_MODULE_0__.CacheService
 }], _class);
-WeatherService = WeatherService_1 = (0,tslib__WEBPACK_IMPORTED_MODULE_5__.__decorate)([(0,_angular_core__WEBPACK_IMPORTED_MODULE_2__.Injectable)()], WeatherService);
+WeatherService = WeatherService_1 = (0,tslib__WEBPACK_IMPORTED_MODULE_6__.__decorate)([(0,_angular_core__WEBPACK_IMPORTED_MODULE_3__.Injectable)()], WeatherService);
 
 
 /***/ }),

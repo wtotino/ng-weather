@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { CacheService } from 'app/cache.service';
 import { LocationService } from 'app/location.service';
+import { environment } from 'environments/environment';
 import { ConditionsAndZip } from './conditions-and-zip.type';
 import { CurrentConditions } from './current-conditions/current-conditions.type';
 import { Forecast } from './forecasts-list/forecast.type';
@@ -23,7 +24,7 @@ export class WeatherService {
 
 	// By using a prefix we make sure even in an object we keep insertion order, since zipcodes are numbers it would order them otherwise
 	private static readonly PREFIX = "z_";
-	private static URL = 'http://api.openweathermap.org/data/2.5';
+	private static URL =  ( environment.production ? 'https' : 'http' ) + '://api.openweathermap.org/data/2.5';
 	private static APPID = '5a4b2d457ecbef9eb2a71e480b947604';
 	private static ICON_URL = 'https://raw.githubusercontent.com/udacity/Sunshine-Version-2/sunshine_master/app/src/main/res/drawable-hdpi/';
 	private currentConditionsMap = signal<ConditionsMap>({});
