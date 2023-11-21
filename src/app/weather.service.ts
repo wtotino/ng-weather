@@ -91,6 +91,7 @@ export class WeatherService {
 		const url = `${WeatherService.URL}/forecast/daily?zip=${zipcode},us&units=imperial&cnt=5&APPID=${WeatherService.APPID}`;
 		return this.cacheService.get(url, this.http.get<Forecast>(url).pipe(catchError(e => {
 			// Remove the location from the localStorage if we had some error fecthing data
+			console.error("Error while retrieving data");
 			this.locationService.removeLocation(zipcode);
 			return of(e);
 		})));
