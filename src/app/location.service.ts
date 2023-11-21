@@ -10,7 +10,7 @@ export class LocationService {
 
 	/**
 	 * Subject used to notify when locations are changed
-	 * We use a BehaviorSubject so whoever subscribes will get the current statte of the locations
+	 * We use a BehaviorSubject so whoever subscribes will get the current state of the locations
 	 */
 	private locationsSub: BehaviorSubject<string[]> = new BehaviorSubject([]);
 

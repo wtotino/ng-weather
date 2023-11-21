@@ -8,7 +8,7 @@ import { Observable, of, tap } from "rxjs";
  * and refreshes it if enough time passed (based on AppConfig.cacheRefresh value)
  * @see AppConfig
  * 
- * NB: At first I thought about creating an interceptor but that would've been easy to "copy paste" from the internet so I decided on something more "personal"
+ * Personal Note: At first I thought about creating an interceptor but that would've been easy to "copy paste" from the internet so I decided on something more "personal"
  * There's still some advantages in using this approach, for example one can decide in each service which calls gets cached and which aren't
  */
 @Injectable({

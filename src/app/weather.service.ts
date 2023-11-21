@@ -26,19 +26,26 @@ export class WeatherService {
 	private static ICON_URL = 'https://raw.githubusercontent.com/udacity/Sunshine-Version-2/sunshine_master/app/src/main/res/drawable-hdpi/';
 	private currentConditionsMap = signal<ConditionsMap>({});
 
-	// We create a computed signal that returns the array
+	/**
+	 * computed signal that returns data as an array like in the previous implementation, by doing so the new way of keeping the data is transparent for whoever uses the service
+	 */
 	private currentConditions: Signal<ConditionsAndZip[]> = computed(() => Object.values(this.currentConditionsMap()));
 
 	constructor(private http: HttpClient, private locationService: LocationService, private cacheService: CacheService) {
 		// We use takeUntilDestroyed so that if this service is provided locally in a component it will be destoryed together with the component
 		this.locationService.locations.pipe(takeUntilDestroyed()).subscribe((zipcodes: string[]) => {
+			/* Personal note: I implemented the update this way so it wouldn't make unnecessary calls whenever locationservice passes the whole array back. 
+			I could've just cleared the object and add all the new values back but that would've caused unnecesary calls to the openweather API. Since in the 
+			Step 3 we implemented a cache system this wouldn't be the case anymore but I decided to leave things as they were when I implemented this in Step 1
+			 */
 			this.currentConditionsMap.mutate(conditions => {
-				// We iterate through the existing conditions to remove the ones that have been removed
+				// We iterate through the existing conditions to remove the ones that have been removed from the locationService
 				Object.keys(conditions).forEach(c => {
 					if(!zipcodes.includes(c)) {
-						// We don't call removeCurrentConditions so we don't have multiple mutations
-						// at the moment nobody calls removeCurrentConditions because it goes through locationService
-						// Maybe add and remove CurrentConditions should be private?
+						/* We don't call removeCurrentConditions so we don't have multiple mutations
+						   at the moment nobody calls removeCurrentConditions because it goes through locationService
+						   Maybe add and remove CurrentConditions should be private?
+						 */
 						delete conditions[c];
 					}
 				});
@@ -60,6 +67,10 @@ export class WeatherService {
 		}));
 	}
 
+	/**
+	 * Personal note: in the previous implementation there was a bug: if the same zipcode was inserted more than once, removing one would've removed them all
+	 * The new implementation doesn't allow the same zipcode multiple times so the bug doesn't happen (please forgive me if the same zipcode multiple times was actually a feature)
+	 */
 	public removeCurrentConditions(zipcode: string) {
 		this.currentConditionsMap.mutate(conditions => {
 			delete conditions[zipcode];
